@@ -11,7 +11,6 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem('token');
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      // You can add logic to verify token here
       setUser(JSON.parse(localStorage.getItem('user')));
     }
     setLoading(false);
@@ -31,8 +30,18 @@ export const AuthProvider = ({ children }) => {
     delete axios.defaults.headers.common['Authorization'];
   };
 
+  const updateUser = (updatedData) => {
+    const merged = { ...user, ...updatedData };
+    setUser(merged);
+    localStorage.setItem('user', JSON.stringify(merged));
+  };
+
+  const isStudent = user?.role === 'student';
+  const isInstructor = user?.role === 'instructor';
+  const isAdmin = user?.role === 'admin';
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, loading, updateUser, isStudent, isInstructor, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );

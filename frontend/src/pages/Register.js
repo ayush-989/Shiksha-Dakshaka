@@ -9,6 +9,7 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [role, setRole] = useState('student');
   const [loading, setLoading] = useState(false);
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/register', { name, email, password });
+      const res = await axios.post('http://localhost:5000/api/auth/register', { name, email, password, role });
       login(res.data.user, res.data.token);
       toast.success('Account created successfully');
       navigate('/');
@@ -55,6 +56,20 @@ const Register = () => {
         {/* Form */}
         <div className="bg-white rounded-xl shadow-lg p-8">
           <form className="space-y-6" onSubmit={handleSubmit}>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">I am a</label>
+              <div className="flex gap-4 mb-2">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" value="student" checked={role === 'student'} onChange={() => setRole('student')} className="text-purple-600" />
+                  <span className="text-gray-700">🎓 Student</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" value="instructor" checked={role === 'instructor'} onChange={() => setRole('instructor')} className="text-purple-600" />
+                  <span className="text-gray-700">👨‍🏫 Instructor</span>
+                </label>
+              </div>
+            </div>
+
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
                 Full Name

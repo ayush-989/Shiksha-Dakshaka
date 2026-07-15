@@ -19,7 +19,10 @@ const Login = () => {
       const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
       login(res.data.user, res.data.token);
       toast.success('Logged in successfully');
-      navigate('/');
+      const role = res.data.user.role;
+      if (role === 'admin') navigate('/admin');
+      else if (role === 'instructor') navigate('/instructor/dashboard');
+      else navigate('/dashboard');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Login failed');
     } finally {

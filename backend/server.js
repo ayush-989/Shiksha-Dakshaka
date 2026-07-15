@@ -7,19 +7,20 @@ const path = require('path');
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+const corsOptions = {
+  origin: process.env.CLIENT_URL || '*',
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.log(err));
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.log(err));
 
-// Routes
-app.use('/api/auth', require('./routes/auth'));
+app.use('/api/auth', require('./routes/auth').router);
 app.use('/api/quiz', require('./routes/quiz'));
 app.use('/api/score', require('./routes/score'));
 app.use('/api/compile', require('./routes/compile'));
@@ -27,8 +28,12 @@ app.use('/api/ai', require('./routes/ai'));
 app.use('/api/videos', require('./routes/videos'));
 app.use('/api/mentor', require('./routes/mentorAuth').router);
 app.use('/api/courses', require('./routes/courses'));
+app.use('/api/assignments', require('./routes/assignments'));
+app.use('/api/notifications', require('./routes/notifications'));
+app.use('/api/forum', require('./routes/forum'));
+app.use('/api/admin', require('./routes/admin'));
+app.use('/api/certificate', require('./routes/certificate'));
 
-// Serve uploaded files statically
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const PORT = process.env.PORT || 5000;

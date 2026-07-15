@@ -177,7 +177,7 @@ const VideoManager = () => {
                 <div key={video.id} className="bg-gray-50 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
                   <div className="aspect-video bg-black rounded-lg mb-3 overflow-hidden">
                     <video
-                      src={`http://localhost:5000${video.url}`}
+                      src={`${window.API_URL}${video.url}`}
                       className="w-full h-full object-cover"
                       controls
                       preload="metadata"
